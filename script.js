@@ -26,4 +26,30 @@ window.addEventListener("DOMContentLoaded", () => {
   document.documentElement.addEventListener("mouseenter", () => {
     cursor.classList.add("visible");
   });
+
+  const player = document.getElementById("cd-player");
+  const audio = document.getElementById("bg-audio");
+  audio.volume = 0.1;
+
+  audio.addEventListener("error", () => {
+    console.error("[bg-audio] failed to load source", audio.error);
+  });
+
+  player.addEventListener("click", () => {
+    if (audio.paused) {
+      audio
+        .play()
+        .then(() => player.classList.add("playing"))
+        .catch((err) => {
+          console.error("[bg-audio] play() rejected:", err);
+        });
+    } else {
+      audio.pause();
+      player.classList.remove("playing");
+    }
+  });
+
+  audio.addEventListener("ended", () => {
+    player.classList.remove("playing");
+  });
 });
